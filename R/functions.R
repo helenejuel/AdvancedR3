@@ -1,4 +1,4 @@
-#' Calculate descriptive statistics of each metabolite
+#' Calculate descriptive statistics for each metabolite
 #'
 #' @param data Lipidomics dataset
 #'
