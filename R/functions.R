@@ -1,8 +1,8 @@
-#' Title
+#' Calculate descriptive statistics of each metabolite
 #'
-#' @param data
+#' @param data Lipidomics dataset
 #'
-#' @return "A data.frame/tibble."
+#' @return A data.frame/tibble
 
 descriptive_stats <- function(data) {
     data %>%
