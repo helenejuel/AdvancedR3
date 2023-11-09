@@ -12,11 +12,14 @@ editor:
 
 ## Setup and load data
 
-```{r setup, warning=FALSE, include=FALSE}
+```{r setup, warning=FALSE, include=TRUE}
 targets::tar_config_set(store = here::here("_targets"))
 
 library(tidyverse)
 library(targets)
+library(tidymodels)
+
+source(here::here("R/functions.R"))
 
 lipidomics <- tar_read(lipidomics)
 
