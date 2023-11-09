@@ -30,8 +30,22 @@ lipidomics %>%
   mutate(across(where(is.numeric), ~ round(.x, digits = 1)))
 ```
 
+```{r plot-metabolites}
+metabolite_distribution_plot <- 
+    ggplot(lipidomics, 
+           aes(x = value)) +
+    geom_histogram() +
+    facet_wrap(vars(metabolite), scales = "free")
+
+metabolite_distribution_plot
+```
+
+```{r plot-metabolites-function}
+
+
+```
+
 ## This is poorly formatted
 
 -   This is item 1
 -   This is item 2
-
