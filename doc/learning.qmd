@@ -1,6 +1,6 @@
 ---
 title: "Draft Quarto document"
-author: "Your Name"
+author: "Helene Bæk Juel"
 format: html
 execute:
   echo: true
@@ -12,42 +12,25 @@ editor:
 
 ## Setup and load data
 
-```{r setup}
+```{r setup, warning=FALSE, include=FALSE}
+targets::tar_config_set(store = here::here("_targets"))
+
 library(tidyverse)
-source(here::here("R/functions.R"))
+library(targets)
 
-lipidomics <- read_csv(here::here("data/lipidomics.csv"))
-```
-
-## Basic statistics
-
-### Replaced by function
-
-```{r basic-stats, eval=FALSE}
-# original code, converted to function and moved to functions.R
-lipidomics %>%
-  group_by(metabolite) %>%
-  summarise(across(value, list(mean = mean, sd = sd))) %>%
-  mutate(across(where(is.numeric), ~ round(.x, digits = 1)))
-```
-
-```{r plot-metabolites, eval=FALSE}
-# original code, converted to function and moved to functions.R
-metabolite_distribution_plot <- 
-    ggplot(lipidomics, 
-           aes(x = value)) +
-    geom_histogram() +
-    facet_wrap(vars(metabolite), scales = "free")
-
-metabolite_distribution_plot
-```
-
-```{r plot-metabolites-function}
-
+lipidomics <- tar_read(lipidomics)
 
 ```
 
-## This is poorly formatted
+## Results
 
--   This is item 1
--   This is item 2
+```{r stats-table}
+tar_read(df_stats_by_metabolite) %>% 
+    dplyr::mutate(MeanSD = glue::glue("{value_mean} ({value_sd})")) %>% 
+    select(Metabolite = metabolite, `Mean SD` = MeanSD) %>% 
+    knitr::kable(caption = "Descriptive statistics of the metabolites")
+```
+
+```{r plot}
+tar_read(fig_metabolite_distribution)
+```
