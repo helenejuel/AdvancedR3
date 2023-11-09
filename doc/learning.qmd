@@ -60,42 +60,91 @@ lipidomics_wide <- lipidomics %>%
 ```
 
 ```{r run-wrangle-functions}
-lipidomics %>% 
-  column_values_to_snake_case(metabolite) %>% 
-    metabolites_to_wider()
+lipidomics %>%
+  column_values_to_snake_case(metabolite) %>%
+  metabolites_to_wider()
 
-# the first function has 2 arguments, data = lipidomics and cols = metabolite. 
+# the first function has 2 arguments, data = lipidomics and cols = metabolite.
 # the second function has just the one argument, data = lipidomics
 ```
 
 ```{r log-regression}
-recipe(class ~ metabolite_lipid_ch_3_1 + age + gender, 
-       data = lipidomics_wide)
-
+recipe(class ~ metabolite_lipid_ch_3_1 + age + gender,
+  data = lipidomics_wide
+)
 ```
 
 ```{r reg-update-roles}
-recipe(lipidomics_wide) %>% 
-    update_role(metabolite_lipid_ch_3_1, age, gender,
-                new_role = "predictor") %>% 
-    update_role(class, 
-                new_role = "outcome") %>% 
-    step_normalize(starts_with("metabolite_"))
+recipe(lipidomics_wide) %>%
+  update_role(metabolite_lipid_ch_3_1, age, gender,
+    new_role = "predictor"
+  ) %>%
+  update_role(class,
+    new_role = "outcome"
+  ) %>%
+  step_normalize(starts_with("metabolite_"))
 ```
 
 ```{r reg-update-roles-function}
-recipe(lipidomics_wide) %>% 
-    update_role(metabolite_lipid_ch_3_1, age, gender,
-                new_role = "predictor") %>% 
-    update_role(class, 
-                new_role = "outcome") %>% 
-    step_normalize(starts_with("metabolite_"))
+recipe(lipidomics_wide) %>%
+  update_role(metabolite_lipid_ch_3_1, age, gender,
+    new_role = "predictor"
+  ) %>%
+  update_role(class,
+    new_role = "outcome"
+  ) %>%
+  step_normalize(starts_with("metabolite_"))
 ```
 
 ```{r run-recipe-function}
-recipe_specs <- lipidomics_wide %>% 
-    create_recipe_spec(metabolite_lipid_ch_3_1)
+recipe_specs <- lipidomics_wide %>%
+  create_recipe_spec(metabolite_lipid_ch_3_1)
 
 recipe_specs
+```
 
+```{r workflow}
+workflow() %>% 
+    add_model(log_reg_specs) %>% 
+    add_recipe(recipe_specs)
+```
+
+```{r run-workflow-function}
+model_workflow <- create_model_workflow(logistic_reg() %>% 
+                                            set_engine("glm"),
+                                        lipidomics_wide %>% 
+                                            create_recipe_spec(metabolite_lipid_ch_3_1))
+
+model_workflow
+```
+
+```{r fit-model}
+fitted_model <- model_workflow %>% 
+    fit(lipidomics_wide)
+
+fitted_model
+```
+
+```{r simple-model-output}
+fitted_model %>% 
+    extract_fit_parsnip() %>% 
+    broom::tidy(exponentiate = TRUE) # changes logOR to OR
+
+```
+
+```{r simple-model-function}
+fitted_model %>% 
+    tidy_model_output()
+
+```
+
+```{r putting-it-together}
+create_model_workflow(
+    logistic_reg() %>% 
+        set_engine("glm"),
+    lipidomics_wide %>% 
+        create_recipe_spec(metabolite_lipid_ch_3_1)
+) %>% 
+    fit(lipidomics_wide) %>% 
+    tidy_model_output()
 ```

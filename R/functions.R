@@ -71,3 +71,28 @@ metabolites_to_wider <- function(data) {
             names_prefix = "metabolite_"
         )
 }
+
+#' Create a workflow object of the model including transformations
+#'
+#' @param model_specs The model specifications from function
+#' @param recipe_specs The recipe specifications from function
+#'
+#' @return A workflow object
+
+create_model_workflow <- function(model_specs, recipe_specs) {
+    workflows::workflow() %>%
+        workflows::add_model(model_specs) %>%
+        workflows::add_recipe(recipe_specs)
+}
+
+#' Create a tidy output of model results
+#'
+#' @param workflow_fitted_model The model workflow object that has been fitted
+#'
+#' @return A data frame
+
+tidy_model_output <- function(workflow_fitted_model) {
+    workflow_fitted_model %>%
+        workflows::extract_fit_parsnip() %>%
+        broom::tidy(exponentiate = TRUE)
+}
