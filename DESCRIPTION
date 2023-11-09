@@ -13,12 +13,14 @@ Imports:
     rmarkdown,
     snakecase,
     stringr,
+    tarchetypes,
     targets,
     tidyr,
     usethis
 Encoding: UTF-8
 Suggests: 
     gitcreds,
+    quarto,
     renv,
     styler
 URL: https://github.com/helenejuel/AdvancedR3

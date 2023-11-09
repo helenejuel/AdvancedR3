@@ -23,14 +23,16 @@ lipidomics <- read_csv(here::here("data/lipidomics.csv"))
 
 ### Replaced by function
 
-```{r basic-stats, include=FALSE}
+```{r basic-stats, eval=FALSE}
+# original code, converted to function and moved to functions.R
 lipidomics %>%
   group_by(metabolite) %>%
   summarise(across(value, list(mean = mean, sd = sd))) %>%
   mutate(across(where(is.numeric), ~ round(.x, digits = 1)))
 ```
 
-```{r plot-metabolites}
+```{r plot-metabolites, eval=FALSE}
+# original code, converted to function and moved to functions.R
 metabolite_distribution_plot <- 
     ggplot(lipidomics, 
            aes(x = value)) +
