@@ -21,20 +21,17 @@ lipidomics <- read_csv(here::here("data/lipidomics.csv"))
 
 ## Basic statistics
 
-```{r basic-stats}
+### Replaced by function
+
+```{r basic-stats, include=FALSE}
 lipidomics %>%
   group_by(metabolite) %>%
   summarise(across(value, list(mean = mean, sd = sd))) %>%
   mutate(across(where(is.numeric), ~ round(.x, digits = 1)))
 ```
 
-## Converting to function
-
-```{r basic-stats-function}
-
-```
-
 ## This is poorly formatted
 
 -   This is item 1
 -   This is item 2
+
