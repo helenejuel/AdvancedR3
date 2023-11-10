@@ -147,7 +147,7 @@ lipidomics %>%
   split_by_metabolite()
 ```
 
-```{r split-model-function}
+```{r split-model-function, eval=FALSE}
 model_estimates <- lipidomics %>%
   split_by_metabolite() %>%
   map(generate_model_results) %>%
@@ -170,7 +170,28 @@ lipidomics %>%
 
 ## Figure of model estimates
 
-```{r}
+```{r model-estimates-targets}
 model_estimates <- tar_read(df_model_estimates)
 
+```
+
+```{r plot-estimates, eval = FALSE}
+plot_estimates <- model_estimates %>% 
+    ggplot(aes(x = estimate, y = metabolite, 
+               xmin = estimate - std.error,
+               xmax = estimate + std.error)) +
+    geom_pointrange() +
+    coord_fixed(xlim = c(0,5))
+
+plot_estimates
+```
+
+```{r plot-estimates-function, eval=FALSE}
+model_estimates %>% 
+    plot_estimates()
+
+```
+
+```{r plot-estimates-targets}
+tar_read(fig_model_estimates)
 ```
