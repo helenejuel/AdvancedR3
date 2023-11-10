@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Lipidomics study",
-    "section": "",
-    "text": "Lipidomics study\nThis is my website for showing off my skills, not in lipidomics, but in using targets and quarto to build an automated pipeline and website."
-  },
-  {
     "objectID": "doc/learning.html#results",
     "href": "doc/learning.html#results",
     "title": "Draft Quarto document",
@@ -33,5 +26,12 @@
     "title": "Draft Quarto document",
     "section": "Figure of model estimates",
     "text": "Figure of model estimates"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Lipidomics study",
+    "section": "",
+    "text": "Lipidomics study\nThis is my website for showing off my skills, not in lipidomics, but in using targets and quarto to build an automated pipeline and website."
   }
 ]
