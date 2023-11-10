@@ -1,6 +1,9 @@
 ---
 title: "Draft Quarto document"
-author: "Helene Bæk Juel"
+author: 
+- name: Helene Bæk Juel
+  affiliations: 
+  - name: Freya Biosciences
 format: html
 execute:
   echo: true
@@ -26,20 +29,20 @@ lipidomics <- tar_read(lipidomics)
 
 ## Results
 
-```{r stats-table}
+```{r stats-table, include=TRUE}
 tar_read(df_stats_by_metabolite) %>%
   dplyr::mutate(MeanSD = glue::glue("{value_mean} ({value_sd})")) %>%
   select(Metabolite = metabolite, `Mean SD` = MeanSD) %>%
   knitr::kable(caption = "Descriptive statistics of the metabolites")
 ```
 
-```{r plot}
+```{r histograms-targets, include=TRUE}
 tar_read(fig_metabolite_distribution)
 ```
 
 ## Building the model
 
-```{r wrangle, eval = FALSE}
+```{r wrangle, eval = FALSE, include=FALSE}
 lipidomics_wide <- lipidomics %>%
   mutate(metabolite = snakecase::to_snake_case(metabolite)) %>%
   pivot_wider(
@@ -50,7 +53,7 @@ lipidomics_wide <- lipidomics %>%
   )
 ```
 
-```{r run-wrangle-functions, eval = FALSE}
+```{r run-wrangle-functions, eval = FALSE, include=FALSE}
 lipidomics %>%
   column_values_to_snake_case(metabolite) %>%
   metabolites_to_wider()
@@ -59,13 +62,13 @@ lipidomics %>%
 # the second function has just the one argument, data = lipidomics
 ```
 
-```{r log-regression, eval = FALSE}
+```{r log-regression, eval = FALSE, include=FALSE}
 recipe(class ~ metabolite_lipid_ch_3_1 + age + gender,
   data = lipidomics_wide
 )
 ```
 
-```{r reg-update-roles, eval = FALSE}
+```{r reg-update-roles, eval = FALSE, include=FALSE}
 recipe(lipidomics_wide) %>%
   update_role(metabolite_lipid_ch_3_1, age, gender,
     new_role = "predictor"
@@ -76,7 +79,7 @@ recipe(lipidomics_wide) %>%
   step_normalize(starts_with("metabolite_"))
 ```
 
-```{r reg-update-roles-function, eval = FALSE}
+```{r reg-update-roles-function, eval = FALSE, include=FALSE}
 recipe(lipidomics_wide) %>%
   update_role(metabolite_lipid_ch_3_1, age, gender,
     new_role = "predictor"
@@ -87,20 +90,20 @@ recipe(lipidomics_wide) %>%
   step_normalize(starts_with("metabolite_"))
 ```
 
-```{r run-recipe-function, eval = FALSE}
+```{r run-recipe-function, eval = FALSE, include=FALSE}
 recipe_specs <- lipidomics_wide %>%
   create_recipe_spec(metabolite_lipid_ch_3_1)
 
 recipe_specs
 ```
 
-```{r workflow, eval = FALSE}
+```{r workflow, eval = FALSE, include=FALSE}
 workflow() %>%
   add_model(log_reg_specs) %>%
   add_recipe(recipe_specs)
 ```
 
-```{r run-workflow-function, eval = FALSE}
+```{r run-workflow-function, eval = FALSE, include=FALSE}
 model_workflow <- create_model_workflow(
   logistic_reg() %>%
     set_engine("glm"),
@@ -111,25 +114,25 @@ model_workflow <- create_model_workflow(
 model_workflow
 ```
 
-```{r fit-model, eval = FALSE}
+```{r fit-model, eval = FALSE, include=FALSE}
 fitted_model <- model_workflow %>%
   fit(lipidomics_wide)
 
 fitted_model
 ```
 
-```{r simple-model-output, eval = FALSE}
+```{r simple-model-output, eval = FALSE, include=FALSE}
 fitted_model %>%
   extract_fit_parsnip() %>%
   broom::tidy(exponentiate = TRUE) # changes logOR to OR
 ```
 
-```{r simple-model-function, eval = FALSE}
+```{r simple-model-function, eval = FALSE, include=FALSE}
 fitted_model %>%
   tidy_model_output()
 ```
 
-```{r putting-it-together, eval = FALSE}
+```{r putting-it-together, eval = FALSE, include=FALSE}
 create_model_workflow(
   logistic_reg() %>%
     set_engine("glm"),
@@ -142,12 +145,12 @@ create_model_workflow(
 
 ## Running multiple models
 
-```{r split-function, eval = FALSE}
+```{r split-function, eval = FALSE, include=FALSE}
 lipidomics %>%
   split_by_metabolite()
 ```
 
-```{r split-model-function, eval=FALSE}
+```{r split-model-function, eval=FALSE, include=FALSE}
 model_estimates <- lipidomics %>%
   split_by_metabolite() %>%
   map(generate_model_results) %>%
@@ -157,7 +160,7 @@ model_estimates <- lipidomics %>%
 model_estimates
 ```
 
-```{r original-names, eval = FALSE}
+```{r original-names, eval = FALSE, include=FALSE}
 lipidomics %>%
   select(metabolite) %>%
   mutate(term = metabolite) %>%
@@ -170,12 +173,12 @@ lipidomics %>%
 
 ## Figure of model estimates
 
-```{r model-estimates-targets}
+```{r model-estimates-targets, include=TRUE}
 model_estimates <- tar_read(df_model_estimates)
 
 ```
 
-```{r plot-estimates, eval = FALSE}
+```{r plot-estimates, eval = FALSE, include=FALSE}
 plot_estimates <- model_estimates %>% 
     ggplot(aes(x = estimate, y = metabolite, 
                xmin = estimate - std.error,
@@ -186,12 +189,12 @@ plot_estimates <- model_estimates %>%
 plot_estimates
 ```
 
-```{r plot-estimates-function, eval=FALSE}
+```{r plot-estimates-function, eval=FALSE, include=FALSE}
 model_estimates %>% 
     plot_estimates()
 
 ```
 
-```{r plot-estimates-targets}
+```{r plot-estimates-targets, include=TRUE}
 tar_read(fig_model_estimates)
 ```
