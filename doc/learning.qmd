@@ -168,6 +168,9 @@ lipidomics %>%
 
 ```
 
+## Figure of model estimates
+
 ```{r}
+model_estimates <- tar_read(df_model_estimates)
 
 ```
