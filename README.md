@@ -5,9 +5,13 @@ editor_options:
     canonical: true
 ---
 
-# AdvancedR3: I have no idea what I'm doing
+# AdvancedR3: Learning about targets and quarto
 
-This project is to learn more and maybe end up knowing what I'm doing.
+Check out the project's
+[website](https://helenejuel.github.io/AdvancedR3/).
+
+This project is to learn more and maybe end up understanding what I'm
+doing.
 
 # Brief description of folder and file contents
 
@@ -36,3 +40,4 @@ You'll need to have remotes installed for this to work.
 For more information on this folder and file workflow and setup, check
 out the [prodigenr](https://rostools.github.io/prodigenr) online
 documentation.
+
