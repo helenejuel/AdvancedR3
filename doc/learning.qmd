@@ -1,5 +1,5 @@
 ---
-title: "Draft Quarto document"
+title: "Lipidomics analysis quarto"
 author: 
 - name: Helene Bæk Juel
   affiliations: 
