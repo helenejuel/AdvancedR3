@@ -135,10 +135,24 @@ generate_model_results <- function(data) {
 
 add_original_metabolite_names <- function(model_results, data) {
     data %>%
-        dplyr::select(metabolite) %>%
         dplyr::mutate(term = metabolite) %>%
         column_values_to_snake_case(term) %>%
-        dplyr::mutate(term = str_c("metabolite_", term)) %>%
+        dplyr::mutate(term = stringr::str_c("metabolite_", term)) %>%
         dplyr::distinct(term, metabolite) %>%
-        stringr::right_join(model_results, by = "term")
+        dplyr::right_join(model_results, by = "term")
+}
+
+#' Calculate the estimates for the model for each metabolite.
+#'
+#' @param data The lipidomics dataset.
+#'
+#' @return A data frame.
+#'
+calculate_estimates <- function(data) {
+    data %>%
+        split_by_metabolite() %>%
+        purrr::map(generate_model_results) %>%
+        purrr::list_rbind() %>%
+        dplyr::filter(stringr::str_detect(term, "metabolite_")) %>%
+        add_original_metabolite_names(data)
 }
