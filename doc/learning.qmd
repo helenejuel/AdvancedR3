@@ -104,47 +104,79 @@ recipe_specs
 ```
 
 ```{r workflow}
-workflow() %>% 
-    add_model(log_reg_specs) %>% 
-    add_recipe(recipe_specs)
+workflow() %>%
+  add_model(log_reg_specs) %>%
+  add_recipe(recipe_specs)
 ```
 
 ```{r run-workflow-function}
-model_workflow <- create_model_workflow(logistic_reg() %>% 
-                                            set_engine("glm"),
-                                        lipidomics_wide %>% 
-                                            create_recipe_spec(metabolite_lipid_ch_3_1))
+model_workflow <- create_model_workflow(
+  logistic_reg() %>%
+    set_engine("glm"),
+  lipidomics_wide %>%
+    create_recipe_spec(metabolite_lipid_ch_3_1)
+)
 
 model_workflow
 ```
 
 ```{r fit-model}
-fitted_model <- model_workflow %>% 
-    fit(lipidomics_wide)
+fitted_model <- model_workflow %>%
+  fit(lipidomics_wide)
 
 fitted_model
 ```
 
 ```{r simple-model-output}
-fitted_model %>% 
-    extract_fit_parsnip() %>% 
-    broom::tidy(exponentiate = TRUE) # changes logOR to OR
-
+fitted_model %>%
+  extract_fit_parsnip() %>%
+  broom::tidy(exponentiate = TRUE) # changes logOR to OR
 ```
 
 ```{r simple-model-function}
-fitted_model %>% 
-    tidy_model_output()
-
+fitted_model %>%
+  tidy_model_output()
 ```
 
 ```{r putting-it-together}
 create_model_workflow(
-    logistic_reg() %>% 
-        set_engine("glm"),
-    lipidomics_wide %>% 
-        create_recipe_spec(metabolite_lipid_ch_3_1)
-) %>% 
-    fit(lipidomics_wide) %>% 
-    tidy_model_output()
+  logistic_reg() %>%
+    set_engine("glm"),
+  lipidomics_wide %>%
+    create_recipe_spec(metabolite_lipid_ch_3_1)
+) %>%
+  fit(lipidomics_wide) %>%
+  tidy_model_output()
+```
+
+## Running multiple models
+
+```{r split-function}
+lipidomics %>%
+  split_by_metabolite()
+```
+
+```{r split-model-function}
+model_estimates <- lipidomics %>%
+  split_by_metabolite() %>%
+  map(generate_model_results) %>%
+  list_rbind() %>%
+  filter(str_detect(term, "metabolite_"))
+
+model_estimates
+```
+
+```{r original-names}
+lipidomics %>%
+  select(metabolite) %>%
+  mutate(term = metabolite) %>%
+  column_values_to_snake_case(term) %>%
+  mutate(term = str_c("metabolite_", term)) %>%
+  distinct(term, metabolite) %>%
+  right_join(model_estimates, by = "term")
+
+```
+
+```{r}
+
 ```
