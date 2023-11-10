@@ -1,1 +1,3 @@
-# Lipidomics study Home
+# Lipidomics study
+
+This is my website for showing off my skills, not in lipidomics, but in using targets and quarto to build an automated pipeline and website.
