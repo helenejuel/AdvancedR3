@@ -15,7 +15,9 @@ editor:
 
 ## Setup and load data
 
-```{r setup, warning=FALSE, include=TRUE}
+```{r setup}
+#| warning: false
+#| include: false
 targets::tar_config_set(store = here::here("_targets"))
 
 library(tidyverse)
